@@ -4,4 +4,4 @@ workspace:
 
 localResources:
   docs:
-    - ../README.md
+    - ../dayflow-member2/README.md
