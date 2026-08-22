@@ -1,0 +1,105 @@
+.login-page {
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.logo {
+  width: 52px;
+  height: 52px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #635bdb;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.login-card h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #202124;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-control {
+  height: 48px;
+  border-radius: 9px;
+}
+
+.form-control:focus {
+  border-color: #635bdb;
+  box-shadow: 0 0 0 3px rgba(99, 91, 219, 0.12);
+}
+
+.password-box {
+  position: relative;
+}
+
+.password-box .form-control {
+  padding-right: 65px;
+}
+
+.show-button {
+  position: absolute;
+  right: 10px;
+  top: 9px;
+  border: none;
+  background: none;
+  color: #635bdb;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.forgot-button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #635bdb;
+  font-size: 13px;
+}
+
+.login-button {
+  height: 48px;
+  border-radius: 9px;
+  background: #635bdb;
+  color: white;
+  font-weight: 600;
+}
+
+.login-button:hover {
+  background: #5149c7;
+  color: white;
+}
+
+.signup-button {
+  border: none;
+  background: none;
+  color: #635bdb;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.security-text {
+  color: #999;
+  font-size: 12px;
+}
+
+@media (max-width: 576px) {
+  .login-card {
+    padding: 28px 22px;
+  }
+}
