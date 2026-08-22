@@ -5,6 +5,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const authenticationApi = require("./api/authenticationApi");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const attendanceApi = require("./api/attendanceApi");
 
 const app = express();
 
@@ -32,6 +34,10 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authenticationApi);
+
+app.use("/api/dashboard", dashboardRoutes);
+
+app.use("/api/attendance", attendanceApi);
 
 mongoose
   .connect(process.env.MONGO_URI)
