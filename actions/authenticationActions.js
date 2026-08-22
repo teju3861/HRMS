@@ -49,7 +49,7 @@ const register = async (req, res, next) => {
     }
 
     const existingUser = await User.findOne({
-      $or: [{ email: email }, { employeeId: employeeId }],
+      $or: [{ email }, { employeeId }],
     });
 
     if (existingUser) {
@@ -63,16 +63,14 @@ const register = async (req, res, next) => {
     const user = await User.create({
       employeeId,
       name,
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword,
       role,
     });
 
-    const token = createToken(user);
-
     res.status(201).json({
       user: sanitizeUser(user),
-      token: token,
+      token: createToken(user),
     });
   } catch (error) {
     next(error);
@@ -107,11 +105,9 @@ const login = async (req, res, next) => {
       });
     }
 
-    const token = createToken(user);
-
     res.json({
       user: sanitizeUser(user),
-      token: token,
+      token: createToken(user),
     });
   } catch (error) {
     next(error);
