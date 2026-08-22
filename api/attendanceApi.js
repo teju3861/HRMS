@@ -37,6 +37,41 @@ router.post("/check-in", authenticate, async (req, res) => {
   }
 });
 
+router.post("/check-out", authenticate, async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const attendance = await Attendance.findOne({
+      employee: req.user._id,
+      date: today,
+    });
+
+    if (!attendance) {
+      return res.status(400).json({
+        message: "You must check in before checking out",
+      });
+    }
+
+    if (attendance.checkOut) {
+      return res.status(400).json({
+        message: `Already checked out today`,
+      });
+    }
+
+    attendance.checkOut = new Date();
+    await attendance.save();
+
+    res.json(attendance);
+  } catch (error) {
+    console.error(error.message);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
 router.get("/", authenticate, async (req, res) => {
   try {
     let filter = {};

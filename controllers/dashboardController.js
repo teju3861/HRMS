@@ -9,14 +9,14 @@ const getDashboard = async (req, res) => {
       .sort({ name: 1 });
 
     const attendance = await Attendance.find()
-      .populate("employee", "employeeId name")
+      .populate("employee", "employeeId name role department designation")
       .sort({ date: -1 })
-      .limit(10);
+      .limit(20);
 
     const pendingLeaves = await Leave.find({
       status: "Pending",
     })
-      .populate("employee", "employeeId name")
+      .populate("employee", "employeeId name role department designation")
       .sort({ createdAt: -1 });
 
     const totalEmployees = await User.countDocuments();

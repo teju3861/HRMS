@@ -1,162 +1,114 @@
-* {
-  box-sizing: border-box;
+/* Navbar Styling with Gradient & Gold Top Accent */
+.navbar-custom {
+  background: linear-gradient(135deg, #2F4858 0%, #116976 50%, #008A80 100%) !important;
+  border-top: 4px solid #F4D14F !important;
+  box-shadow: 0 4px 20px rgba(47, 72, 88, 0.15) !important;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-}
-
-.register-page {
-  min-height: 100vh;
-}
-
-.register-section {
-  min-height: 100vh;
+/* Brand Logo Badge */
+.brand-icon-box {
+  background: #F4D14F;
+  color: #2F4858;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(244, 209, 79, 0.4);
 }
 
-.register-card {
-  width: 100%;
-  max-width: 500px;
-  padding: 35px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px #ddd;
+/* Nav Button Pill Styling */
+.nav-pill-btn {
+  border-radius: 20px !important;
+  padding: 0.4rem 0.9rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease-in-out !important;
 }
 
-.form-heading {
-  margin-bottom: 25px;
+.nav-pill-btn.active {
+  background-color: #F4D14F !important;
+  color: #2F4858 !important;
+  box-shadow: 0 3px 10px rgba(244, 209, 79, 0.35) !important;
+  border-color: #F4D14F !important;
 }
 
-.form-heading h2 {
-  margin: 0;
-  font-size: 28px;
+/* User Role Gold Tag */
+.user-role-tag {
+  background-color: #F4D14F;
+  color: #2F4858;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.2em 0.6em;
+  border-radius: 12px;
 }
 
-.form-heading p {
-  color: #777;
-  font-size: 14px;
-}
-
-.form-group {
-  margin-bottom: 18px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 7px;
-  font-weight: bold;
-}
-
-.input-wrapper {
+/* Card Enhancements */
+.card-stat {
   position: relative;
+  overflow: hidden;
 }
 
-.input-icon {
+.card-stat::before {
+  content: "";
   position: absolute;
-  left: 12px;
-  top: 15px;
-  color: #888;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--palette-teal, #008A80);
 }
 
-input,
-select {
-  width: 100%;
-  height: 45px;
-  padding: 0 40px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
+.card-stat-gold::before {
+  background: #F4D14F !important;
 }
 
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #6c5ce7;
+.card-stat-green::before {
+  background: #49A973 !important;
 }
 
-.show-password {
-  position: absolute;
-  right: 10px;
-  top: 13px;
-  border: none;
-  background: none;
-  color: #5b4bd8;
-  cursor: pointer;
+.card-stat-teal::before {
+  background: #008A80 !important;
 }
 
-.password-rules {
-  margin-top: 8px;
-  padding: 10px;
-  background: #f7f7f7;
-  border-radius: 8px;
-  font-size: 12px;
+/* Table Hover Polish */
+.table-hover tbody tr:hover {
+  background-color: #F0F6F4 !important;
 }
 
-.rules-title {
-  font-weight: bold;
-  margin-bottom: 5px;
+/* Section Header Typography Accent */
+.section-title {
+  position: relative;
+  display: inline-block;
 }
 
-.rules-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-}
-
-.rules-grid span {
-  color: #999;
-}
-
-.rules-grid .valid {
-  color: green;
-}
-
-.error-message {
+.section-title::after {
+  content: "";
   display: block;
-  margin-top: 5px;
-  color: red;
-  font-size: 12px;
+  width: 36px;
+  height: 3px;
+  background: #F4D14F;
+  border-radius: 2px;
+  margin-top: 4px;
 }
 
-.success-message {
-  display: block;
-  margin-top: 5px;
-  color: green;
-  font-size: 12px;
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.register-button {
-  width: 100%;
-  height: 48px;
-  border: none;
-  border-radius: 8px;
-  background: #6252df;
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
+::-webkit-scrollbar-track {
+  background: #F3F7F6;
 }
 
-.register-button:hover {
-  background: #5141c8;
+::-webkit-scrollbar-thumb {
+  background: #B6CDCA;
+  border-radius: 4px;
 }
 
-.register-button span {
-  margin-left: 8px;
-}
-
-@media (max-width: 600px) {
-  .register-card {
-    padding: 25px 20px;
-  }
-
-  .rules-grid {
-    grid-template-columns: 1fr;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #008A80;
 }

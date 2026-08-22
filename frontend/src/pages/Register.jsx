@@ -1,17 +1,23 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
-function Register() {
+function Register({ onSwitchToLogin, onRegisterSuccess }) {
+  const { register } = useAuth();
+
   const [formData, setFormData] = useState({
+    name: "",
     employeeId: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "Employee",
+    role: "Employee", // Public registration strictly creates Employee accounts
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const passwordRules = {
     length: formData.password.length >= 8,
@@ -28,329 +34,325 @@ function Register() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-
-    setSubmitted(false);
+    setErrorMessage("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    if (!formData.employeeId) {
+    if (!formData.name.trim()) {
+      setErrorMessage("Full Name is required.");
       return;
     }
 
-    if (!formData.email) {
+    if (!formData.employeeId.trim()) {
+      setErrorMessage("Employee ID is required.");
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setErrorMessage("Work Email is required.");
       return;
     }
 
     if (!strongPassword) {
+      setErrorMessage("Please ensure your password meets all requirements.");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match.");
       return;
     }
 
-    console.log("Registration Data:", formData);
+    setLoading(true);
 
-    alert("Account details validated successfully!");
+    try {
+      await register({
+        name: formData.name.trim(),
+        employeeId: formData.employeeId.trim().toUpperCase(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+        role: "Employee",
+      });
+
+      setSuccessMessage("Account created successfully! Redirecting...");
+      setTimeout(() => {
+        if (onRegisterSuccess) {
+          onRegisterSuccess();
+        }
+      }, 1000);
+    } catch (err) {
+      setErrorMessage(err.message || "Failed to create account. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="register-page">
-
-      <div className="register-section">
-
-        <div className="register-card">
-
-          <div className="form-heading">
-            <h2>Create your account</h2>
-
-            <p>
-              Join Dayflow and get started with your HR workspace.
-            </p>
+    <div className="container py-4" style={{ maxWidth: "560px" }}>
+      <div className="card shadow border-0 rounded-4 overflow-hidden">
+        {/* Card Header with Palette Gradient */}
+        <div
+          className="card-header p-4 text-center text-white"
+          style={{
+            background: "linear-gradient(135deg, #2F4858 0%, #116976 50%, #008A80 100%)",
+            borderBottom: "4px solid #F4D14F",
+          }}
+        >
+          <div
+            className="d-inline-flex p-3 rounded-circle mb-2 shadow-sm"
+            style={{ backgroundColor: "#F4D14F", color: "#2F4858" }}
+          >
+            <i className="bi bi-person-plus-fill fs-2"></i>
           </div>
+          <h3 className="fw-bold mb-1 text-white">Create Employee Account</h3>
+          <p className="mb-0 text-white-50 small">
+            Register your employee profile to get started with Dayflow
+          </p>
+        </div>
+
+        <div className="card-body p-4 p-md-5">
+          {errorMessage && (
+            <div
+              className="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2"
+              role="alert"
+            >
+              <i className="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+              <div>{errorMessage}</div>
+              <button
+                type="button"
+                className="btn-close ms-auto"
+                onClick={() => setErrorMessage("")}
+                aria-label="Close"
+              ></button>
+            </div>
+          )}
+
+          {successMessage && (
+            <div
+              className="alert alert-success d-flex align-items-center gap-2"
+              role="alert"
+            >
+              <i className="bi bi-check-circle-fill flex-shrink-0"></i>
+              <div>{successMessage}</div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit}>
+            {/* Full Name */}
+            <div className="mb-3">
+              <label htmlFor="regName" className="form-label fw-semibold text-palette-navy">
+                Full Name
+              </label>
+              <div className="input-group">
+                <span className="input-group-text bg-light border-end-0">
+                  <i className="bi bi-person text-palette-teal"></i>
+                </span>
+                <input
+                  id="regName"
+                  type="text"
+                  name="name"
+                  className="form-control border-start-0 ps-0"
+                  placeholder="e.g. Sarah Connor"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  autoFocus
+                />
+              </div>
+            </div>
 
-            {/* EMPLOYEE ID */}
-            <div className="form-group">
-
-              <label htmlFor="employeeId">
+            {/* Employee ID */}
+            <div className="mb-3">
+              <label htmlFor="regEmployeeId" className="form-label fw-semibold text-palette-navy">
                 Employee ID
               </label>
-
-              <div className="input-wrapper">
-
-                <span className="input-icon">
-                  ID
+              <div className="input-group">
+                <span className="input-group-text bg-light border-end-0">
+                  <i className="bi bi-card-heading text-palette-teal"></i>
                 </span>
-
                 <input
-                  id="employeeId"
+                  id="regEmployeeId"
                   type="text"
                   name="employeeId"
-                  placeholder="Enter your employee ID"
+                  className="form-control border-start-0 ps-0"
+                  placeholder="e.g. EMP101"
                   value={formData.employeeId}
                   onChange={handleChange}
                   required
                 />
-
               </div>
-
-              {submitted && !formData.employeeId && (
-                <small className="error-message">
-                  Employee ID is required.
-                </small>
-              )}
-
             </div>
 
-
-            {/* EMAIL */}
-            <div className="form-group">
-
-              <label htmlFor="email">
+            {/* Email */}
+            <div className="mb-3">
+              <label htmlFor="regEmail" className="form-label fw-semibold text-palette-navy">
                 Work Email
               </label>
-
-              <div className="input-wrapper">
-
-                <span className="input-icon">
-                  @
+              <div className="input-group">
+                <span className="input-group-text bg-light border-end-0">
+                  <i className="bi bi-envelope text-palette-teal"></i>
                 </span>
-
                 <input
-                  id="email"
+                  id="regEmail"
                   type="email"
                   name="email"
-                  placeholder="you@company.com"
+                  className="form-control border-start-0 ps-0"
+                  placeholder="name@company.com"
                   value={formData.email}
                   onChange={handleChange}
                   required
                 />
-
               </div>
-
-              {submitted && !formData.email && (
-                <small className="error-message">
-                  Email address is required.
-                </small>
-              )}
-
             </div>
 
-
-            {/* PASSWORD */}
-            <div className="form-group">
-
-              <label htmlFor="password">
+            {/* Password */}
+            <div className="mb-3">
+              <label htmlFor="regPassword" className="form-label fw-semibold text-palette-navy">
                 Password
               </label>
-
-              <div className="input-wrapper">
-
-                <span className="input-icon">
-                  ••
+              <div className="input-group">
+                <span className="input-group-text bg-light border-end-0">
+                  <i className="bi bi-lock text-palette-teal"></i>
                 </span>
-
                 <input
-                  id="password"
+                  id="regPassword"
                   type={showPassword ? "text" : "password"}
                   name="password"
+                  className="form-control border-start-0 border-end-0 ps-0"
                   placeholder="Create a strong password"
                   value={formData.password}
                   onChange={handleChange}
                   required
                 />
-
                 <button
                   type="button"
-                  className="show-password"
-                  onClick={() =>
-                    setShowPassword(!showPassword)
-                  }
+                  className="btn btn-outline-secondary border-start-0"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? "Hide" : "Show"}
+                  <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                 </button>
-
               </div>
 
-
-              {/* PASSWORD REQUIREMENTS */}
-              <div className="password-rules">
-
-                <div className="rules-title">
-                  Password requirements
+              {/* Real-time Password Requirements */}
+              {formData.password && (
+                <div className="p-3 bg-light rounded-3 mt-2 border">
+                  <small className="fw-semibold d-block text-muted mb-2">
+                    Password requirements:
+                  </small>
+                  <div className="row g-1 small">
+                    <div className={`col-6 ${passwordRules.length ? "text-success fw-bold" : "text-muted"}`}>
+                      <i className={`bi ${passwordRules.length ? "bi-check-circle-fill text-success" : "bi-circle"} me-1`}></i>
+                      8+ characters
+                    </div>
+                    <div className={`col-6 ${passwordRules.uppercase ? "text-success fw-bold" : "text-muted"}`}>
+                      <i className={`bi ${passwordRules.uppercase ? "bi-check-circle-fill text-success" : "bi-circle"} me-1`}></i>
+                      Uppercase (A-Z)
+                    </div>
+                    <div className={`col-6 ${passwordRules.lowercase ? "text-success fw-bold" : "text-muted"}`}>
+                      <i className={`bi ${passwordRules.lowercase ? "bi-check-circle-fill text-success" : "bi-circle"} me-1`}></i>
+                      Lowercase (a-z)
+                    </div>
+                    <div className={`col-6 ${passwordRules.number ? "text-success fw-bold" : "text-muted"}`}>
+                      <i className={`bi ${passwordRules.number ? "bi-check-circle-fill text-success" : "bi-circle"} me-1`}></i>
+                      Number (0-9)
+                    </div>
+                    <div className={`col-6 ${passwordRules.special ? "text-success fw-bold" : "text-muted"}`}>
+                      <i className={`bi ${passwordRules.special ? "bi-check-circle-fill text-success" : "bi-circle"} me-1`}></i>
+                      Special character
+                    </div>
+                  </div>
                 </div>
-
-                <div className="rules-grid">
-
-                  <span
-                    className={
-                      passwordRules.length ? "valid" : ""
-                    }
-                  >
-                    {passwordRules.length ? "✓" : "○"}{" "}
-                    8+ characters
-                  </span>
-
-                  <span
-                    className={
-                      passwordRules.uppercase ? "valid" : ""
-                    }
-                  >
-                    {passwordRules.uppercase ? "✓" : "○"}{" "}
-                    Uppercase
-                  </span>
-
-                  <span
-                    className={
-                      passwordRules.lowercase ? "valid" : ""
-                    }
-                  >
-                    {passwordRules.lowercase ? "✓" : "○"}{" "}
-                    Lowercase
-                  </span>
-
-                  <span
-                    className={
-                      passwordRules.number ? "valid" : ""
-                    }
-                  >
-                    {passwordRules.number ? "✓" : "○"}{" "}
-                    Number
-                  </span>
-
-                  <span
-                    className={
-                      passwordRules.special ? "valid" : ""
-                    }
-                  >
-                    {passwordRules.special ? "✓" : "○"}{" "}
-                    Special character
-                  </span>
-
-                </div>
-
-              </div>
-
+              )}
             </div>
 
-
-            {/* CONFIRM PASSWORD */}
-            <div className="form-group">
-
-              <label htmlFor="confirmPassword">
+            {/* Confirm Password */}
+            <div className="mb-4">
+              <label htmlFor="regConfirmPassword" className="form-label fw-semibold text-palette-navy">
                 Confirm Password
               </label>
-
-              <div className="input-wrapper">
-
-                <span className="input-icon">
-                  ••
+              <div className="input-group">
+                <span className="input-group-text bg-light border-end-0">
+                  <i className="bi bi-lock-fill text-palette-teal"></i>
                 </span>
-
                 <input
-                  id="confirmPassword"
-                  type={
-                    showConfirmPassword
-                      ? "text"
-                      : "password"
-                  }
+                  id="regConfirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
+                  className="form-control border-start-0 border-end-0 ps-0"
                   placeholder="Re-enter your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
                 />
-
                 <button
                   type="button"
-                  className="show-password"
-                  onClick={() =>
-                    setShowConfirmPassword(
-                      !showConfirmPassword
-                    )
-                  }
+                  className="btn btn-outline-secondary border-start-0"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                 >
-                  {showConfirmPassword
-                    ? "Hide"
-                    : "Show"}
+                  <i className={`bi ${showConfirmPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                 </button>
-
               </div>
 
-
-              {/* PASSWORD MATCH MESSAGE */}
-              {formData.confirmPassword &&
-                formData.password !==
-                  formData.confirmPassword && (
-                  <small className="error-message">
-                    Passwords do not match.
-                  </small>
-                )}
-
-              {formData.confirmPassword &&
-                formData.password ===
-                  formData.confirmPassword && (
-                  <small className="success-message">
-                    ✓ Passwords match.
-                  </small>
-                )}
-
+              {formData.confirmPassword && (
+                <div className="mt-1">
+                  {formData.password === formData.confirmPassword ? (
+                    <small className="text-success fw-bold d-flex align-items-center gap-1">
+                      <i className="bi bi-check-circle-fill"></i> Passwords match
+                    </small>
+                  ) : (
+                    <small className="text-danger d-flex align-items-center gap-1">
+                      <i className="bi bi-x-circle-fill"></i> Passwords do not match
+                    </small>
+                  )}
+                </div>
+              )}
             </div>
 
-
-            {/* ROLE */}
-            <div className="form-group">
-
-              <label htmlFor="role">
-                Account Role
-              </label>
-
-              <div className="input-wrapper">
-
-                <span className="input-icon">
-                  ●
-                </span>
-
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                >
-                  <option value="Employee">
-                    Employee
-                  </option>
-
-                  <option value="HR">
-                    HR / Admin
-                  </option>
-                </select>
-
-              </div>
-
-            </div>
-
-
-            {/* CREATE ACCOUNT BUTTON */}
+            {/* Submit Button */}
             <button
               type="submit"
-              className="register-button"
+              className="btn btn-primary w-100 py-2.5 fw-semibold shadow-sm d-flex align-items-center justify-content-center gap-2"
+              disabled={loading}
             >
-              Create Account
-              <span>→</span>
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Creating Account...
+                </>
+              ) : (
+                <>
+                  Create Account <i className="bi bi-arrow-right"></i>
+                </>
+              )}
             </button>
-
           </form>
 
+          {/* Quick toggle to Login */}
+          <div className="text-center mt-4 pt-3 border-top">
+            <p className="text-muted small mb-0">
+              Already have an account?{" "}
+              <button
+                type="button"
+                className="btn btn-link text-decoration-none p-0 fw-bold"
+                style={{ color: "#008A80" }}
+                onClick={onSwitchToLogin}
+              >
+                Sign In
+              </button>
+            </p>
+          </div>
         </div>
-
       </div>
-
     </div>
   );
 }

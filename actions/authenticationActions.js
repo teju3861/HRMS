@@ -48,6 +48,12 @@ const register = async (req, res, next) => {
       });
     }
 
+    if (req.user && req.user.role === "HR Officer" && role !== "Employee") {
+      return res.status(403).json({
+        message: "HR Officers can only create Employee accounts",
+      });
+    }
+
     const existingUser = await User.findOne({
       $or: [{ email }, { employeeId }],
     });
@@ -120,8 +126,70 @@ const me = async (req, res) => {
   });
 };
 
+const updateProfile = async (req, res, next) => {
+  try {
+    const { phone, address, name } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (phone !== undefined) user.phone = phone;
+    if (address !== undefined) user.address = address;
+    if (name !== undefined) user.name = name;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user: sanitizeUser(user),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const seedAdmin = async () => {
+  try {
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+    let admin = await User.findOne({ email: "admin@dayflow.com" });
+    if (!admin) {
+      admin = await User.create({
+        employeeId: "ADM001",
+        name: "Manager",
+        email: "admin@dayflow.com",
+        password: hashedPassword,
+        role: "Admin",
+        department: "Executive Management",
+        designation: "HR Manager",
+        phone: "+1 (555) 019-2834",
+        address: "Dayflow HQ, 100 Innovation Way, Enterprise City",
+      });
+      console.log("Default Manager created: admin@dayflow.com / admin123");
+    } else {
+      admin.name = "Manager";
+      admin.password = hashedPassword;
+      admin.role = "Admin";
+      await admin.save();
+      console.log("Default Manager password reset to admin123");
+    }
+
+    // Rename any System Manager or Admin User in DB to Manager
+    await User.updateMany(
+      { name: /system manager|admin user/i },
+      { name: "Manager" }
+    );
+  } catch (err) {
+    console.error("Error seeding default admin:", err.message);
+  }
+};
+
 module.exports = {
   register,
   login,
   me,
+  updateProfile,
+  seedAdmin,
 };

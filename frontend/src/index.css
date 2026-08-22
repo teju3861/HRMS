@@ -1,11 +1,164 @@
-html,
-body {
-  margin: 0;
-  padding: 0;
-  min-width: 320px;
-  min-height: 100vh;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Image Palette Hex Colors */
+  --palette-gold: #F4D14F;
+  --palette-lime: #99C25B;
+  --palette-leaf: #49A973;
+  --palette-teal: #008A80;
+  --palette-deep-teal: #116976;
+  --palette-slate-navy: #2F4858;
+  --palette-emerald: #008857;
+
+  /* Bootstrap Variable Overrides */
+  --bs-primary: #008A80;
+  --bs-primary-rgb: 0, 138, 128;
+  --bs-secondary: #5C7582;
+  --bs-success: #389E4E;
+  --bs-warning: #F4D14F;
+  --bs-info: #116976;
+  --bs-dark: #2F4858;
+
+  --bs-body-font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bs-body-bg: #F3F7F6;
+  --bs-body-color: #2F4858;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  font-family: var(--bs-body-font-family);
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .fw-bold {
+  font-family: var(--bs-body-font-family);
+  letter-spacing: -0.02em;
+  color: var(--palette-slate-navy);
+}
+
+/* Custom Palette Utility Classes */
+.bg-palette-gold {
+  background-color: var(--palette-gold) !important;
+  color: var(--palette-slate-navy) !important;
+}
+
+.text-palette-gold {
+  color: var(--palette-gold) !important;
+}
+
+.bg-palette-teal {
+  background-color: var(--palette-teal) !important;
+}
+
+.text-palette-teal {
+  color: var(--palette-teal) !important;
+}
+
+.bg-palette-navy {
+  background-color: var(--palette-slate-navy) !important;
+}
+
+.text-palette-navy {
+  color: var(--palette-slate-navy) !important;
+}
+
+/* Primary Button Styling */
+.btn-primary {
+  background: linear-gradient(135deg, var(--palette-teal) 0%, var(--palette-deep-teal) 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 138, 128, 0.25);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background: linear-gradient(135deg, #00766d 0%, #0d545f 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 138, 128, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-warning, .btn-gold {
+  background-color: var(--palette-gold) !important;
+  border: none !important;
+  color: var(--palette-slate-navy) !important;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(244, 209, 79, 0.3);
+}
+
+.btn-warning:hover {
+  background-color: #e5c23d !important;
+  color: var(--palette-slate-navy) !important;
+}
+
+/* Card Modern Styling */
+.card {
+  border-radius: 16px !important;
+  border: 1px solid #E1EBE8 !important;
+  box-shadow: 0 8px 24px rgba(47, 72, 88, 0.05) !important;
+  background-color: #ffffff;
+  transition: all 0.2s ease-in-out;
+}
+
+.card-header {
+  border-bottom: 1px solid #EEF4F2 !important;
+  border-top-left-radius: 16px !important;
+  border-top-right-radius: 16px !important;
+}
+
+/* Input & Select Focus Effects */
+.form-control, .form-select {
+  border-radius: 10px !important;
+  border: 1px solid #D1E0DC !important;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--palette-teal) !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 138, 128, 0.15) !important;
+}
+
+/* Badge Customizations */
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 30px;
+  padding: 0.4em 0.8em;
+}
+
+.bg-primary-subtle {
+  background-color: rgba(0, 138, 128, 0.1) !important;
+  color: var(--palette-teal) !important;
+}
+
+.bg-success-subtle {
+  background-color: rgba(56, 158, 78, 0.12) !important;
+  color: #277739 !important;
+}
+
+.bg-warning-subtle {
+  background-color: rgba(244, 209, 79, 0.25) !important;
+  color: #7A6100 !important;
+}
+
+.bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+  color: #b02a37 !important;
+}
+
+.bg-info-subtle {
+  background-color: rgba(17, 105, 118, 0.12) !important;
+  color: var(--palette-deep-teal) !important;
 }

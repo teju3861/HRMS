@@ -5,3 +5,5 @@ workspace:
 localResources:
   docs:
     - ../dayflow-member2/README.md
+    - ../README.md
+EADME.md

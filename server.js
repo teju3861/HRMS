@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const authenticationApi = require("./api/authenticationApi");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const attendanceApi = require("./api/attendanceApi");
+const leaveApi = require("./api/leaveApi");
 
 const app = express();
 
@@ -23,7 +24,6 @@ if (!process.env.JWT_SECRET) {
 }
 
 app.use(cors());
-
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
@@ -34,15 +34,17 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authenticationApi);
-
 app.use("/api/dashboard", dashboardRoutes);
-
 app.use("/api/attendance", attendanceApi);
+app.use("/api/leave", leaveApi);
+
+const { seedAdmin } = require("./actions/authenticationActions");
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
+    seedAdmin();
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
